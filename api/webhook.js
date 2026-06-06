@@ -4,7 +4,7 @@ const SHOPIFY_STORE = process.env.SHOPIFY_STORE;
 const SHOPIFY_TOKEN = process.env.SHOPIFY_TOKEN;
 
 const shopifyAPI = axios.create({
-  baseURL: `https://${SHOPIFY_STORE}/admin/api/2024-01`,
+baseURL: `https://${SHOPIFY_STORE}/admin/api/2026-04`,
   headers: {
     "X-Shopify-Access-Token": SHOPIFY_TOKEN,
     "Content-Type": "application/json",
