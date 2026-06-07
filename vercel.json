@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "functions": {
     "api/webhook.js": {
       "maxDuration": 30
@@ -6,5 +7,15 @@
     "api/transaction.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "routes": [
+    {
+      "src": "/api/webhook",
+      "dest": "/api/webhook.js"
+    },
+    {
+      "src": "/api/transaction",
+      "dest": "/api/transaction.js"
+    }
+  ]
 }
