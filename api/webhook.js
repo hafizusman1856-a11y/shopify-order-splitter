@@ -61,21 +61,24 @@ export default async function handler(req, res) {
       const items = vidGroups[vid];
 
       const newOrder = {
-        order: {
-          line_items: items.map((item) => ({
-            variant_id: item.variant_id,
-            quantity: item.quantity,
-          })),
-          customer: order.customer
-            ? { id: order.customer.id }
-            : undefined,
-          shipping_address: order.shipping_address,
-          billing_address: order.billing_address,
-          financial_status: "pending",
-          note: `Split from Order #${order.order_number} - VID: ${vid}`,
-          tags: `split-order, VID-${vid}`,
-        },
-      };
+  order: {
+    line_items: items.map((item) => ({
+      variant_id: item.variant_id,
+      quantity: item.quantity,
+    })),
+    customer: order.customer ? { id: order.customer.id } : undefined,
+    financial_status: "pending",
+    note: `Split from Order #${order.order_number} - VID: ${vid}`,
+    tags: `split-order, VID-${vid}`,
+  },
+};
+
+if (order.shipping_address) {
+  newOrder.order.shipping_address = order.shipping_address;
+}
+if (order.billing_address) {
+  newOrder.order.billing_address = order.billing_address;
+}
 
       const createdOrder = await shopifyAPI.post("/orders.json", newOrder);
       console.log(
