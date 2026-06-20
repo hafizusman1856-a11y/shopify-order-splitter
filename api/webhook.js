@@ -106,10 +106,32 @@ module.exports = async function handler(req, res) {
       }
 
       const createdOrder = await shopifyAPI.post("/orders.json", newOrder);
+      const newOrderId = createdOrder.data.order.id;
       console.log(
         `New order created for VID ${vid} (${vendorTag}, ${paymentTag}):`,
-        createdOrder.data.order.id
+        newOrderId
       );
+
+      // Step 4b - Order pe SEPARATE metafields bhi save karo (tags ke ilawa)
+      await shopifyAPI.post(`/orders/${newOrderId}/metafields.json`, {
+        metafield: {
+          namespace: "custom",
+          key: "order_vendor_name",
+          value: vendorName,
+          type: "single_line_text_field",
+        },
+      });
+
+      await shopifyAPI.post(`/orders/${newOrderId}/metafields.json`, {
+        metafield: {
+          namespace: "custom",
+          key: "order_payment_status",
+          value: paymentStatus,
+          type: "single_line_text_field",
+        },
+      });
+
+      console.log(`Metafields saved for order ${newOrderId}`);
     }
 
     // Step 5 - Original order cancel karo
